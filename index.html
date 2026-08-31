@@ -40,7 +40,7 @@ body{background:var(--bg); color:var(--ink);
   font-family:"Segoe UI",system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
   line-height:1.55; -webkit-font-smoothing:antialiased;}
 a{color:var(--brand)}
-.wrap{max-width:940px;margin:0 auto;padding:0 20px 80px}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px 80px}
 button{font-family:inherit;color:inherit}
 
 .topbar{position:sticky;top:0;z-index:40;background:color-mix(in srgb,var(--bg) 86%,transparent);
@@ -74,7 +74,11 @@ button{font-family:inherit;color:inherit}
 .section{margin-top:26px}
 .section > h3{font-size:12.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink3);margin:0 0 12px;font-weight:700}
 
-.objgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.objtoggle{display:inline-flex;align-items:center;gap:9px;cursor:pointer;background:var(--card);border:1px solid var(--line);border-radius:11px;padding:10px 15px;font-size:12.5px;text-transform:uppercase;letter-spacing:.09em;color:var(--ink2);font-weight:700;box-shadow:var(--shadow);transition:.15s}
+.objtoggle:hover{border-color:var(--brand);color:var(--brand)}
+.objtoggle .chev{width:16px;height:16px;transition:transform .2s}
+.objtoggle[aria-expanded="true"] .chev{transform:rotate(180deg)}
+.objgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
 @media(max-width:640px){.objgrid{grid-template-columns:1fr}}
 .obj{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:15px 16px;box-shadow:var(--shadow);display:flex;gap:12px}
 .obj .n{flex:0 0 auto;width:28px;height:28px;border-radius:8px;background:var(--brandsoft);color:var(--brandtext);
@@ -355,8 +359,8 @@ function renderHome(){
     </div>
   </div>
   <div class="section">
-    <h3>Objectifs pédagogiques</h3>
-    <div class="objgrid">${objs.map((o,i)=>`<div class="obj"><div class="n">${i+1}</div><p>${o}</p></div>`).join("")}</div>
+    <button class="objtoggle" id="objBtn" aria-expanded="false"><span>Objectifs pédagogiques</span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></button>
+    <div class="objgrid hidden" id="objGrid">${objs.map((o,i)=>`<div class="obj"><div class="n">${i+1}</div><p>${o}</p></div>`).join("")}</div>
   </div>
   <div class="section">
     <h3>Choisir les thèmes <span style="text-transform:none;font-weight:600;color:var(--ink3)">— aucun sélectionné = tous les cas</span></h3>
@@ -382,6 +386,7 @@ function renderHome(){
   });
   $("#shuf").onchange=e=>state.shuffle=e.target.checked;
   $("#startBtn").onclick=start;
+  $("#objBtn").onclick=()=>{ const g=$("#objGrid"),b=$("#objBtn"); const willShow=g.classList.contains("hidden"); g.classList.toggle("hidden"); b.setAttribute("aria-expanded",willShow?"true":"false"); };
   updateSel();
 }
 function updateSel(){
